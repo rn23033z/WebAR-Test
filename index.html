@@ -3,85 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hello WebXR!</title>
-
-  <!-- three.js -->
-  <script src="https://unpkg.com/three@0.126.0/build/three.js"></script>
+  <title>WebAR テストサイト</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px 20px;
+      background-color: #f4f4f9;
+    }
+    h1 {
+      font-size: 24px;
+      color: #333;
+    }
+    p {
+      color: #666;
+      margin-bottom: 30px;
+    }
+    .btn {
+      display: block;
+      width: 80%;
+      max-width: 280px;
+      margin: 15px auto;
+      padding: 15px;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .android { background-color: #3ddc84; color: #000; }
+    .iphone { background-color: #000; }
+  </style>
 </head>
 <body>
 
-<button onclick="activateXR()">Start Hello WebXR</button>
+  <h1>WebAR テストサイト</h1>
+  <p>お使いの端末に合わせて選択してください</p>
 
-<script>
-async function activateXR() {
-  // ブラウザがWebXRに対応しているか確認
-  if (!navigator.xr) {
-    alert("お使いのブラウザや端末はWebXRに対応していません。");
-    return;
-  }
+  <a href="android.html" class="btn android">Android版を見る (WebXR)</a>
+  <a href="iphone.html" class="btn iphone">iPhone版を見る (model-viewer)</a>
 
-  // CanvasとWebGLコンテキストの初期化
-  const canvas = document.createElement("canvas");
-  document.body.appendChild(canvas);
-  const gl = canvas.getContext("webgl", {xrCompatible: true});
-
-  const scene = new THREE.Scene();
-
-  // 立方体の作成（見えやすいようにカメラの正面方向（-1）に配置）
-  const materials = [
-    new THREE.MeshBasicMaterial({color: 0xff0000}),
-    new THREE.MeshBasicMaterial({color: 0x0000ff}),
-    new THREE.MeshBasicMaterial({color: 0x00ff00}),
-    new THREE.MeshBasicMaterial({color: 0xff00ff}),
-    new THREE.MeshBasicMaterial({color: 0x00ffff}),
-    new THREE.MeshBasicMaterial({color: 0xffff00})
-  ];
-  const cube = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), materials);
-  cube.position.set(0, 0, -1); 
-  scene.add(cube);
-
-  const renderer = new THREE.WebGLRenderer({
-    alpha: true,
-    preserveDrawingBuffer: true,
-    canvas: canvas,
-    context: gl
-  });
-  renderer.autoClear = false;
-
-  const camera = new THREE.PerspectiveCamera();
-  camera.matrixAutoUpdate = false;
-
-  // 【追加】ARセッションを開始（ここでカメラのアクセス許可ダイアログが出ます）
-  const session = await navigator.xr.requestSession("immersive-ar");
-  session.updateRenderState({
-    baseLayer: new XRWebGLLayer(session, gl)
-  });
-
-  // 【追加】AR空間の座標系（参照空間）を取得
-  const referenceSpace = await session.requestReferenceSpace('local');
-
-  // 描画フレーム処理
-  const onXRFrame = (time, frame) => {
-    session.requestAnimationFrame(onXRFrame);
-
-    gl.bindFramebuffer(gl.FRAMEBUFFER, session.renderState.baseLayer.framebuffer);
-
-    const pose = frame.getViewerPose(referenceSpace);
-    if (pose) {
-      const view = pose.views[0];
-      const viewport = session.renderState.baseLayer.getViewport(view);
-      renderer.setSize(viewport.width, viewport.height);
-
-      camera.matrix.fromArray(view.transform.matrix);
-      camera.projectionMatrix.fromArray(view.projectionMatrix);
-      camera.updateMatrixWorld(true);
-
-      renderer.render(scene, camera);
-    }
-  };
-
-  session.requestAnimationFrame(onXRFrame);
-}
-</script>
 </body>
 </html>

@@ -203,27 +203,31 @@ body {
 }
 
 /* インジケータードット */
+/* インジケータードット */
 .slider-dots {
   position: absolute;
   bottom: 12px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 10px;
+  gap: 12px;
   z-index: 10;
 }
 
 .dot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   background-color: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.3s;
+  cursor: pointer;             /* マウスカーソルを指マークに */
+  padding: 4px;                /* タップしやすいように押し領域を拡大 */
+  background-clip: content-box;
 }
 
 .dot.active {
   background-color: var(--text-white);
-  transform: scale(1.2);
+  transform: scale(1.25);
 }
 
 /* ==========================================

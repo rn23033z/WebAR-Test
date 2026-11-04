@@ -5,17 +5,44 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ==========================================
-  // 1. スライダーの初期化と自動切り替え
+// ==========================================
+  // 1. スライダーの初期化と自動切り替え (手動タップ対応)
   // ==========================================
   const sliderContainer = document.getElementById('hero-slider');
   const dotsContainer = document.getElementById('slider-dots');
   let currentSlide = 0;
+  let slideInterval = null;
 
   if (HERO_SLIDES && HERO_SLIDES.length > 0) {
-    // スライドとドットを挿入
+
+    // 指定した番号のスライドを表示する関数
+    function goToSlide(index) {
+      const slides = document.querySelectorAll('.slide-item');
+      const dots = document.querySelectorAll('.dot');
+
+      if (slides.length === 0 || dots.length === 0) return;
+
+      slides[currentSlide].classList.remove('active');
+      dots[currentSlide].classList.remove('active');
+
+      currentSlide = index;
+
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+    }
+
+    // 自動スライドを開始（タイマーリセット機能付き）
+    function startAutoSlide() {
+      if (slideInterval) clearInterval(slideInterval);
+      slideInterval = setInterval(() => {
+        const nextSlide = (currentSlide + 1) % HERO_SLIDES.length;
+        goToSlide(nextSlide);
+      }, 3500);
+    }
+
+    // スライドとドット要素の生成
     HERO_SLIDES.forEach((slide, index) => {
-      // スライド要素
+      // スライド画像要素
       const slideDiv = document.createElement('div');
       slideDiv.className = `slide-item ${index === 0 ? 'active' : ''}`;
       slideDiv.style.backgroundImage = `url('${slide.imageUrl}')`;
@@ -30,22 +57,18 @@ document.addEventListener('DOMContentLoaded', () => {
       // ドット要素
       const dot = document.createElement('div');
       dot.className = `dot ${index === 0 ? 'active' : ''}`;
+      
+      // ★ ドットのタップ（クリック）イベント
+      dot.addEventListener('click', () => {
+        goToSlide(index);
+        startAutoSlide(); // タップ後、タイマーをリセットして3.5秒カウントし直す
+      });
+
       dotsContainer.appendChild(dot);
     });
 
-    // 自動スライド処理 (3.5秒間隔)
-    setInterval(() => {
-      const slides = document.querySelectorAll('.slide-item');
-      const dots = document.querySelectorAll('.dot');
-
-      slides[currentSlide].classList.remove('active');
-      dots[currentSlide].classList.remove('active');
-
-      currentSlide = (currentSlide + 1) % HERO_SLIDES.length;
-
-      slides[currentSlide].classList.add('active');
-      dots[currentSlide].classList.add('active');
-    }, 3500);
+    // 自動切り替えスタート
+    startAutoSlide();
   }
 
 // ==========================================

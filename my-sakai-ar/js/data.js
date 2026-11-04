@@ -8,15 +8,15 @@
 const HERO_SLIDES = [
   {
     title: '大仙古墳',
-    imageUrl: 'C:/Users/kato0811/Pictures/PBL2/my-saka-ar/image/daisen.jpg'
+    imageUrl: 'https://rn23033z.github.io/WebAR-Test/my-sakai-ar/image/daisen.jpg'
   },
   {
     title: 'さかい利晶の杜',
-    imageUrl: 'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&w=800&q=80'
+    imageUrl: 'https://rn23033z.github.io/WebAR-Test/my-sakai-ar/image/risho.jpeg'
   },
   {
     title: '旧堺燈台',
-    imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80'
+    imageUrl: 'https://rn23033z.github.io/WebAR-Test/my-sakai-ar/image/sakaitodai.jpg'
   }
 ];
 
